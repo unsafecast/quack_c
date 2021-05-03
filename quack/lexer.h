@@ -1,6 +1,7 @@
 #pragma once
 #include <quack/unit.h>
 #include <quack/integer.h>
+#include <quack/token.h>
 
 typedef struct QkLexer QkLexer;
 struct QkLexer {
@@ -9,4 +10,5 @@ struct QkLexer {
     i64 index;
 };
 
-void qkLexerInit(QkLexer* lexer, QkUnit* unit);
+QkLexer qkLexerInit(QkUnit* unit);
+QkToken qkLexerNext(QkLexer* lexer);
