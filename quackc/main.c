@@ -6,7 +6,7 @@
 #include <string.h>
 
 int main() {
-    char* source = "x := 1;\n";
+    char* source = "x := cr=ateArray[Something]();";
 
     QkUnit unit = qkUnitInit();
     unit.source = qkStringFromArray(source, strlen(source));
@@ -14,8 +14,13 @@ int main() {
     QkLexer lexer = qkLexerInit(&unit);
 
     QkToken tok = qkLexerNext(&lexer);
-    while (tok.kind != QK_TOK_NULL) {
-        qkPrintToken(&tok, stdout);
+    while ((tok.kind != QK_TOK_NULL) && (tok.kind != QK_TOK_EOF)) {
+        qkPrintToken(&tok, stderr);
         tok = qkLexerNext(&lexer);
+    }
+
+    fprintf(stderr, "\n");
+    QK_FOR(&unit.errLog) {
+        qkPrintError(unit.errLog.data[it], &unit.source, stderr);
     }
 }

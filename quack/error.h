@@ -1,5 +1,7 @@
 #pragma once
 #include <stdio.h>
+#include <quack/location.h>
+#include <quack/string.h>
 
 typedef enum QkErrKind QkErrKind;
 enum QkErrKind {
@@ -9,6 +11,7 @@ enum QkErrKind {
 typedef struct QkError QkError;
 struct QkError {
     QkErrKind kind;
+    QkLocation location;
 
     union {
         char val_unexp_char;
@@ -16,6 +19,6 @@ struct QkError {
 };
 
 // We're only gonna need errors on the heap
-QkError* qkErrorUnexpChar(char c);
+QkError* qkErrorUnexpChar(QkLocation loc, char c);
 
-void qkPrintError(QkError* err, FILE* stream);
+void qkPrintError(const QkError* err, const QkString* source, FILE* stream);

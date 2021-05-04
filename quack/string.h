@@ -9,6 +9,7 @@ struct QkString {
 };
 
 QkString qkStringFromArray(char* arr, i64 size);
-void qkPrintString(QkString* str, FILE* stream);
+void qkPrintString(const QkString* str, FILE* stream);
 
-QkString qkSliceString(QkString* src, i64 start, i64 end);
+QkString qkSliceString(const QkString* src, i64 start, i64 end);
+QkString qkSliceStringUntil(const QkString* src, i64 start, char end);
