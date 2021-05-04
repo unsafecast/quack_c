@@ -18,15 +18,15 @@ void qkPrintToken(const QkToken* tok, FILE* stream) {
 
         case QK_TOK_IDENT:
             fputs("TokIdent(", stream);
-            qkPrintString(&tok->val_ident, stream);
+            qkPrintString(&tok->valIdent, stream);
             fputs(")\n", stream);
             break;
         
         case QK_TOK_INT:
-            fprintf(stream, "TokInt(%lld)\n", tok->val_int);
+            fprintf(stream, "TokInt(%lld)\n", tok->valInt);
             break;
 
-        case QK_TOK_CO_LEQ:
+        case QK_TOK_COL_EQ:
             fputs("TokColEq\n", stream);
             break;
 

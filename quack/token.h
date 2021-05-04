@@ -12,7 +12,7 @@ enum QkTokKind {
     QK_TOK_INT,
 
     QK_TOK_COL,
-    QK_TOK_CO_LEQ,
+    QK_TOK_COL_EQ,
     QK_TOK_SEMI,
 };
 
@@ -23,8 +23,8 @@ struct QkToken {
     QkLocation loc;
 
     union {
-        QkString val_ident;
-        i64 val_int;
+        QkString valIdent;
+        i64 valInt;
     };
 };
 

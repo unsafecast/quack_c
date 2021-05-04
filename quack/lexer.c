@@ -37,7 +37,7 @@ QkToken qkLexerNext(QkLexer* lexer) {
         switch (lexer->cur) {
             case ':':
                 switch (advance(lexer)) {
-                    case '=': advance(lexer); return QK_TOKEN(QK_TOK_CO_LEQ, loc);
+                    case '=': advance(lexer); return QK_TOKEN(QK_TOK_COL_EQ, loc);
                     default: return QK_TOKEN(QK_TOK_COL, loc);
                 }
             
@@ -63,7 +63,7 @@ static QkToken getIdent(QkLexer* lexer) {
     while (isalnum(lexer->cur)) advance(lexer);
     return (QkToken) {
         .kind = QK_TOK_IDENT,
-        .val_ident = qkSliceString(&lexer->unit->source, start, lexer->index),
+        .valIdent = qkSliceString(&lexer->unit->source, start, lexer->index),
         .loc = loc,
     };
 }
@@ -75,7 +75,7 @@ static QkToken getNumber(QkLexer* lexer) {
     while (isdigit(lexer->cur)) advance(lexer);  // TODO: Add support for floats
     return (QkToken) {
         .kind = QK_TOK_INT,
-        .val_int = strtol(qkSliceString(&lexer->unit->source, start, lexer->index).data, NULL, 10),
+        .valInt = strtol(qkSliceString(&lexer->unit->source, start, lexer->index).data, NULL, 10),
         .loc = loc,
     };
 }
