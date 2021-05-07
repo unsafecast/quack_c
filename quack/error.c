@@ -72,11 +72,6 @@ void qkPrintError(const QkError* err, const QkString* source, FILE* stream) {
     printOffset(numberOfDigits(err->location.line), ' ', stream);
     qkPrintf(stream, QK_CONS_FMT_BLUE | QK_CONS_FMT_BOLD, " │  ");
     printOffset(err->location.col - 1, ' ', stream);
-    qkPrintf(stream, QK_CONS_FMT_BLUE | QK_CONS_FMT_BOLD, "│\n");
-
-    printOffset(numberOfDigits(err->location.line), ' ', stream);
-    qkPrintf(stream, QK_CONS_FMT_BLUE | QK_CONS_FMT_BOLD, " │  ");
-    printOffset(err->location.col - 1, ' ', stream);
     qkPrintf(stream, QK_CONS_FMT_BLUE | QK_CONS_FMT_BOLD, "└─ here!\n");
 
 

@@ -8,7 +8,7 @@
 #include <string.h>
 
 int main() {
-    char* source = "x - := 32;";
+    char* source = "x := 42;";
 
     QkUnit unit = qkUnitInit();
     unit.source = qkStringFromArray(source, strlen(source));
@@ -18,7 +18,6 @@ int main() {
 
     QkStatement* stmt = qkParseStatement(&parser);
     while ((stmt != NULL) && (stmt->valExpr->kind != QK_EXPR_KIND_EOF)) {
-        // Print it
         qkPrintStatement(0, stmt, stderr);
         stmt = qkParseStatement(&parser);
     }

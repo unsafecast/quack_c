@@ -8,7 +8,7 @@
 static QkToken* advance(QkParser* parser);
 static QkToken* expect(QkParser* parser, QkTokKind kind);
 
-static QkStatement* parseAssign(QkExpression* name, QkParser* parser);
+static QkStatement* parseAssign(QkParser* parser, QkExpression* name);
 
 QkParser qkParserInit(QkLexer* lexer, QkUnit* unit) {
     return (QkParser) {
@@ -25,7 +25,7 @@ QkStatement* qkParseStatement(QkParser* parser) {
 
     switch (advance(parser)->kind) {
         case QK_TOK_COL_EQ:
-            return parseAssign(expr, parser);
+            return parseAssign(parser, expr);
         
         default: {
             QkStatement* stmt = malloc(sizeof(QkStatement));
@@ -76,7 +76,7 @@ QkExpression* qkParseExpression(QkParser* parser) {
     return NULL;
 }
 
-static QkStatement* parseAssign(QkExpression* name, QkParser* parser) {
+static QkStatement* parseAssign(QkParser* parser, QkExpression* name) {
     QkExpression* value = qkParseExpression(parser);
     if (value == NULL) return NULL;
 

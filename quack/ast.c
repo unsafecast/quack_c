@@ -18,6 +18,11 @@ void qkPrintStatement(i64 offset, const QkStatement* stmt, FILE* stream) {
             qkPrintExpression(0, stmt->valAssign.value, stream);
             break;
 
+        case QK_STMT_KIND_EXPR:
+            fputs("StmtExpression ", stream);
+            qkPrintExpression(0, stmt->valExpr, stream);
+            break;
+
         default:
             fputs("<unimplemented print for statement>\n", stream);
             break;
