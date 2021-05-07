@@ -1,4 +1,5 @@
 #include "./parser.h"
+#include "quack/ast.h"
 #include "quack/dynArr.h"
 #include "quack/error.h"
 #include <quack/lexer.h>
@@ -11,10 +12,14 @@ static QkToken* expect(QkParser* parser, QkTokKind kind);
 static QkStatement* parseAssign(QkParser* parser, QkExpression* name);
 
 QkParser qkParserInit(QkLexer* lexer, QkUnit* unit) {
-    return (QkParser) {
+    QkParser parser = (QkParser) {
         .lexer = lexer,
         .unit = unit,
     };
+
+    parser.nextToken = qkLexerNext(parser.lexer);
+
+    return parser;
 }
 
 QkStatement* qkParseStatement(QkParser* parser) {
@@ -23,8 +28,9 @@ QkStatement* qkParseStatement(QkParser* parser) {
     QkExpression* expr = qkParseExpression(parser);
     if (expr == NULL) return NULL;
 
-    switch (advance(parser)->kind) {
+    switch (parser->nextToken.kind) {
         case QK_TOK_COL_EQ:
+            advance(parser);
             return parseAssign(parser, expr);
         
         default: {
@@ -93,7 +99,11 @@ static QkStatement* parseAssign(QkParser* parser, QkExpression* name) {
 }
 
 static QkToken* advance(QkParser* parser) {
-    parser->currentToken = qkLexerNext(parser->lexer);
+    QkToken cur = parser->nextToken;
+    parser->currentToken = cur;
+
+    parser->nextToken = qkLexerNext(parser->lexer);
+
     return &parser->currentToken;
 }
 

@@ -7,20 +7,17 @@ void qkPrintStatement(i64 offset, const QkStatement* stmt, FILE* stream) {
     printOffset(offset, stream);
     switch (stmt->kind) {
         case QK_STMT_KIND_ASSIGN:
-            fputs("StmtAssign\n", stream);
-
-            printOffset(offset + 2, stream);
-            fputs("├ Name: ", stream);
+            fputs("SAssign(", stream);
             qkPrintExpression(0, stmt->valAssign.name, stream);
-
-            printOffset(offset + 2, stream);
-            fputs("└ Value: ", stream);
+            fputs(" := ", stream);
             qkPrintExpression(0, stmt->valAssign.value, stream);
+            fputs(")\n", stream);
             break;
 
         case QK_STMT_KIND_EXPR:
-            fputs("StmtExpression ", stream);
+            fputs("SExpression(", stream);
             qkPrintExpression(0, stmt->valExpr, stream);
+            fputs(")\n", stream);
             break;
 
         default:
@@ -33,17 +30,17 @@ void qkPrintExpression(i64 offset, const QkExpression* expr, FILE* stream) {
     printOffset(offset, stream);
     switch (expr->kind) {
         case QK_EXPR_KIND_IDENT:
-            fputs("ExprIdent(", stream);
+            fputs("EIdent(", stream);
             qkPrintString(&expr->valString, stream);
-            fputs(")\n", stream);
+            fputs(")", stream);
             break;
 
         case QK_EXPR_KIND_INT_LIT:
-            fprintf(stream, "ExprIntLit(%lld)\n", expr->valIntLit);
+            fprintf(stream, "EIntLit(%lld)", expr->valIntLit);
             break;
 
         default:
-            fputs("<unimplemented print for expression>\n", stream);
+            fputs("<unimplemented print for expression>", stream);
             break;
     }
 }

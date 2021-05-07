@@ -8,6 +8,7 @@ struct QkParser {
     QkUnit* unit;
 
     QkToken currentToken;
+    QkToken nextToken;
 };
 
 QkParser qkParserInit(QkLexer* lexer, QkUnit* unit);
