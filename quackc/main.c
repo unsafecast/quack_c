@@ -8,7 +8,7 @@
 #include <string.h>
 
 int main() {
-    char* source = "x := 42: y := 32;";
+    char* source = "x := 42; y := 32;";
 
     QkUnit unit = qkUnitInit();
     unit.source = qkStringFromArray(source, strlen(source));
