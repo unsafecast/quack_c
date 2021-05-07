@@ -18,13 +18,18 @@ struct QkError {
 
     union {
         char valUnexpChar;
-        QkTokKind valExprToken;
+        QkToken unexpectedToken;
+
+        struct {
+            QkTokKind expected;
+            QkToken got;
+        } valExpToken;
     };
 };
 
 // We're only gonna need errors on the heap
 QkError* qkErrorUnexpChar(QkLocation loc, char c);
-QkError* qkErrorExprToken(QkLocation loc, QkTokKind kind);
-QkError* qkErrorUnexpToken(QkLocation loc);
+QkError* qkErrorExpToken(QkLocation loc, QkTokKind expected, const QkToken* got);
+QkError* qkErrorUnexpToken(QkLocation loc, const QkToken* token);
 
 void qkPrintError(const QkError* err, const QkString* source, FILE* stream);

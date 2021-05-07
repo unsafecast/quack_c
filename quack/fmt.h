@@ -1,6 +1,7 @@
 #pragma once
 #include <quack/integer.h>
 #include <stdio.h>
+#include <quack/string.h>
 
 typedef enum QkConsoleFormat QkConsoleFormat;
 enum QkConsoleFormat {
@@ -10,4 +11,5 @@ enum QkConsoleFormat {
     QK_CONS_FMT_BLUE = (1 << 2),
 };
 
-void qkPrintf(FILE* stream, i64 fmt, const char* str, ...);
+void qkFmtPrintf(FILE* stream, i64 fmt, const char* str, ...);
+void qkFmtPrintString(FILE* stream, i64 fmt, const QkString* str);

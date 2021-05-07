@@ -78,7 +78,7 @@ QkExpression* qkParseExpression(QkParser* parser) {
         default: break;
     }
 
-    qkDynArrPush(&parser->unit->errLog, qkErrorUnexpToken(parser->currentToken.loc));
+    qkDynArrPush(&parser->unit->errLog, qkErrorUnexpToken(parser->currentToken.loc, &parser->currentToken));
     return NULL;
 }
 
@@ -110,7 +110,7 @@ static QkToken* advance(QkParser* parser) {
 static QkToken* expect(QkParser* parser, QkTokKind kind) {
     QkToken* token = advance(parser);
     if (token->kind != kind) {
-        qkDynArrPush(&parser->unit->errLog, qkErrorExprToken(token->loc, kind));
+        qkDynArrPush(&parser->unit->errLog, qkErrorExpToken(token->loc, kind, token));
     }
 
     return token;
