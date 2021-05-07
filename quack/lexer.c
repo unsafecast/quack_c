@@ -90,10 +90,6 @@ inline static QkLocation getLocation(QkLexer* lexer) {
 }
 
 inline static char advance(QkLexer* l) {
-    l->index += 1;
-    l->cur = l->unit->source.data[l->index];
-    l->col += 1;  // FIXME: This is kinda broken
-
     if (l->cur == '\n') {
         l->line += 1;
 
@@ -103,9 +99,11 @@ inline static char advance(QkLexer* l) {
         // We set it to 0, not 1, because the "first" one is actually the newline,
         //  which we ignored on the line above
         l->col = 0;
-
-        advance(l);
     }
+
+    l->index += 1;
+    l->cur = l->unit->source.data[l->index];
+    l->col += 1;
 
     return l->cur;
 }

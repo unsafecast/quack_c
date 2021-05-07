@@ -6,12 +6,13 @@
 #include <quack/unit.h>
 #include <quack/parser.h>
 #include <string.h>
+#include <quack/io.h>
 
 int main() {
-    char* source = "x := 42; y := 32;";
+    QkString source = qkReadWholeFile("../examples/assign.qk");
 
     QkUnit unit = qkUnitInit();
-    unit.source = qkStringFromArray(source, strlen(source));
+    unit.source = source;
 
     QkLexer lexer = qkLexerInit(&unit);
     QkParser parser = qkParserInit(&lexer, &unit);
