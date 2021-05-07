@@ -5,9 +5,12 @@
 #include <quack/lexer.h>
 #include <quack/token.h>
 #include <stdlib.h>
+#include <stdbool.h>
 
 static QkToken* advance(QkParser* parser);
-static QkToken* expect(QkParser* parser, QkTokKind kind);
+
+static bool expect(QkParser* parser, QkTokKind kind);
+#define EXPECT(parser, kind) do { if (!expect((parser), (kind))) return NULL; } while (0)
 
 static QkStatement* parseAssign(QkParser* parser, QkExpression* name);
 
@@ -86,7 +89,7 @@ static QkStatement* parseAssign(QkParser* parser, QkExpression* name) {
     QkExpression* value = qkParseExpression(parser);
     if (value == NULL) return NULL;
 
-    expect(parser, QK_TOK_SEMI);
+    EXPECT(parser, QK_TOK_SEMI);
 
     QkStatement* stmt = malloc(sizeof(QkStatement));
     *stmt = (QkStatement) {
@@ -107,11 +110,12 @@ static QkToken* advance(QkParser* parser) {
     return &parser->currentToken;
 }
 
-static QkToken* expect(QkParser* parser, QkTokKind kind) {
+static bool expect(QkParser* parser, QkTokKind kind) {
     QkToken* token = advance(parser);
     if (token->kind != kind) {
         qkDynArrPush(&parser->unit->errLog, qkErrorExpToken(token->loc, kind, token));
+        return false;
     }
 
-    return token;
+    return true;
 }
