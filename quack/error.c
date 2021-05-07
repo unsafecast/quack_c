@@ -85,8 +85,10 @@ void qkPrintError(const QkError* err, const QkString* source, FILE* stream) {
     qkFmtPrintf(stream, POS_FMT, "└─ here!\n");
 
 
+    // Example error output:
     //
-    //  1 │  something
+    //  Error(1:4): Unexpected token ':', expected 'e' instead
+    //  1 │  som: thing
     //    │     │
     //    │     └─ here!
     //
