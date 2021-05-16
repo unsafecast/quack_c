@@ -3,6 +3,7 @@
 #include <quack/integer.h>
 #include <quack/location.h>
 #include <stdio.h>
+#include <quack/type.h>
 
 typedef enum QkExpressionKind QkExpressionKind;
 enum QkExpressionKind {
@@ -37,6 +38,7 @@ struct QkStatement {
         struct {
             QkExpression* name;
             QkExpression* value;
+            QkType* possibleType;
         } valAssign;
 
         QkExpression* valExpr;

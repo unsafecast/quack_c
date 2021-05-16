@@ -1,5 +1,6 @@
 #include "./lexer.h"
 #include "quack/location.h"
+#include "quack/token.h"
 #include <quack/dynArr.h>
 #include <quack/string.h>
 #include <stdbool.h>
@@ -44,6 +45,14 @@ QkToken qkLexerNext(QkLexer* lexer) {
             case ';':
                 advance(lexer);
                 return QK_TOKEN(QK_TOK_SEMI, loc);
+
+            case '*':
+                advance(lexer);
+                return QK_TOKEN(QK_TOK_STAR, loc);
+
+            case '=':
+                advance(lexer);
+                return QK_TOKEN(QK_TOK_EQ, loc);
         }
     }
 

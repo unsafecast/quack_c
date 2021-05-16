@@ -14,6 +14,8 @@ enum QkTokKind {
     QK_TOK_COL,
     QK_TOK_COL_EQ,
     QK_TOK_SEMI,
+    QK_TOK_STAR,
+    QK_TOK_EQ,
 };
 
 typedef struct QkToken QkToken;

@@ -114,6 +114,8 @@ static char* showTokenKind(QkTokKind kind) {
         case QK_TOK_INT:    return "an integer";
         case QK_TOK_IDENT:  return "an identifier";
         case QK_TOK_EOF:    return "end of file";
+        case QK_TOK_EQ:     return "'='";
+        case QK_TOK_STAR:   return "'*'";
     }
 }
 
@@ -141,5 +143,12 @@ static void printToken(FILE* stream, i64 fmt, const QkToken* tok) {
             break;
         case QK_TOK_EOF:
             qkFmtPrintf(stream, fmt, "end of file");
+            break;
+        case QK_TOK_EQ:
+            qkFmtPrintf(stream, fmt, "'='");
+            break;
+        case QK_TOK_STAR:
+            qkFmtPrintf(stream, fmt, "'*'");
+            break;
     }
 }

@@ -1,4 +1,5 @@
 #include "./ast.h"
+#include "quack/type.h"
 #include <stdio.h>
 
 inline static void printOffset(i64 offset, FILE* stream);
@@ -11,7 +12,9 @@ void qkPrintStatement(i64 offset, const QkStatement* stmt, FILE* stream) {
             qkPrintExpression(0, stmt->valAssign.name, stream);
             fputs(" := ", stream);
             qkPrintExpression(0, stmt->valAssign.value, stream);
-            fputs(")\n", stream);
+            fputs("): ", stream);
+            qkPrintType(stmt->valAssign.possibleType, stream);
+            fputs("\n", stream);
             break;
 
         case QK_STMT_KIND_EXPR:
@@ -36,7 +39,7 @@ void qkPrintExpression(i64 offset, const QkExpression* expr, FILE* stream) {
             break;
 
         case QK_EXPR_KIND_INT_LIT:
-            fprintf(stream, "EIntLit(%lld)", expr->valIntLit);
+            fprintf(stream, "EIntLit(%ld)", expr->valIntLit);
             break;
 
         default:
