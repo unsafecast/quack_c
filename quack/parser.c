@@ -1,9 +1,9 @@
 #include "./parser.h"
-#include "quack/ast.h"
-#include "quack/dynArr.h"
-#include "quack/error.h"
-#include "quack/string.h"
-#include "quack/type.h"
+#include <quack/ast.h>
+#include <quack/dynArr.h>
+#include <quack/error.h>
+#include <quack/string.h>
+#include <quack/type.h>
 #include <quack/lexer.h>
 #include <quack/token.h>
 #include <stdlib.h>
