@@ -14,7 +14,14 @@ static QkToken* advance(QkParser* parser);
 static bool expect(QkParser* parser, QkTokKind kind);
 #define EXPECT(parser, kind) do { if (!expect((parser), (kind))) return NULL; } while (0)
 
+// To be used like
+//  QkStatement* TRY(stmt, qkParseStatement(parser))
+#define TRY(name, value) name = value; if (name == NULL) return NULL
+
 static QkStatement* parseAssign(QkParser* parser, QkExpression* name, QkType* possibleType);
+static QkStatement* parseFunction(QkParser* parser);
+
+static QkExpression* parseBlock(QkParser* parser);
 static QkType* parseType(QkParser* parser);
 
 QkParser qkParserInit(QkLexer* lexer, QkUnit* unit) {
@@ -29,10 +36,14 @@ QkParser qkParserInit(QkLexer* lexer, QkUnit* unit) {
 }
 
 QkStatement* qkParseStatement(QkParser* parser) {
-    // Check for keywords like "fn" here
+    switch (parser->nextToken.kind) {
+        case QK_TOK_FUN:
+            advance(parser);
+            return parseFunction(parser);
+        default: break;
+    }
 
-    QkExpression* expr = qkParseExpression(parser);
-    if (expr == NULL) return NULL;
+	QkExpression* TRY(expr, qkParseExpression(parser));
 
     switch (parser->nextToken.kind) {
         case QK_TOK_COL_EQ:
@@ -41,12 +52,13 @@ QkStatement* qkParseStatement(QkParser* parser) {
 
         case QK_TOK_COL: {
             advance(parser);
-            QkType* type = parseType(parser);
+			QkType* TRY(type, parseType(parser));
             EXPECT(parser, QK_TOK_EQ);
             return parseAssign(parser, expr, type);
         }
         
         default: {
+            advance(parser);
             QkStatement* stmt = malloc(sizeof(QkStatement));
             *stmt = (QkStatement) {
                 .kind = QK_STMT_KIND_EXPR,
@@ -96,8 +108,7 @@ QkExpression* qkParseExpression(QkParser* parser) {
 }
 
 static QkStatement* parseAssign(QkParser* parser, QkExpression* name, QkType* possibleType) {
-    QkExpression* value = qkParseExpression(parser);
-    if (value == NULL) return NULL;
+	QkExpression* TRY(value, qkParseExpression(parser));
 
     EXPECT(parser, QK_TOK_SEMI);
 
@@ -143,11 +154,40 @@ static QkType* parseType(QkParser* parser) {
         }
     }
 
-    QkExpression* name = qkParseExpression(parser);
-    if (name == NULL) return NULL;
+	QkExpression* TRY(name, qkParseExpression(parser));
     QkType* type = qkTypeIncompleteInit(name);
     type->typeFlags |= typeFlags;
     return type;
+}
+
+static QkExpression* parseBlock(QkParser* parser) {
+    EXPECT(parser, QK_TOK_CURLY_OPEN);
+    QkDynArr array = qkDynArrInit(0);
+    while (parser->nextToken.kind != QK_TOK_CURLY_CLOSE) {
+		QkStatement* TRY(stmt, qkParseStatement(parser));
+        qkDynArrPush(&array, stmt);
+    }
+    advance(parser);
+
+    QkExpression* expr = malloc(sizeof(QkExpression));
+    *expr = (QkExpression) {
+        .kind = QK_EXPR_KIND_BLOCK,
+        .valBlock = array,
+    };
+    return expr;
+}
+
+static QkStatement* parseFunction(QkParser* parser) {
+    QkExpression* TRY(name, qkParseExpression(parser));
+    QkExpression* TRY(body, parseBlock(parser));
+
+    QkStatement* stmt = malloc(sizeof(QkStatement));
+    *stmt = (QkStatement) {
+        .kind = QK_STMT_KIND_FUN,
+        .valFun.name = name,
+        .valFun.body = body,
+    };
+    return stmt;
 }
 
 static QkToken* advance(QkParser* parser) {

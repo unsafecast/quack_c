@@ -1,8 +1,4 @@
 
-x := 3;
-y := 42;
-z := 32;
-
-withType: Int8 = 32;
-withType2: *Int8 = null;
-withType3: const *const Int8 = null;
+fun h {
+	x: SomeType = 43;
+}

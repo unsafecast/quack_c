@@ -53,6 +53,14 @@ QkToken qkLexerNext(QkLexer* lexer) {
             case '=':
                 advance(lexer);
                 return QK_TOKEN(QK_TOK_EQ, loc);
+
+            case '{':
+                advance(lexer);
+                return QK_TOKEN(QK_TOK_CURLY_OPEN, loc);
+
+            case '}':
+                advance(lexer);
+                return QK_TOKEN(QK_TOK_CURLY_CLOSE, loc);
         }
     }
 
@@ -61,18 +69,22 @@ QkToken qkLexerNext(QkLexer* lexer) {
 }
 
 
-/*
-    Private Functions
-*/
 
 static QkToken getIdent(QkLexer* lexer) {
     QkLocation loc = getLocation(lexer);
 
     i64 start = lexer->index;
     while (isalnum(lexer->cur)) advance(lexer);
+
+    QkString ident = qkSliceString(&lexer->unit->source, start, lexer->index);
+
+    QkTokKind kind;
+    if (qkStringArrEq(&ident, "fun")) kind = QK_TOK_FUN;
+    else kind = QK_TOK_IDENT;
+
     return (QkToken) {
-        .kind = QK_TOK_IDENT,
-        .valIdent = qkSliceString(&lexer->unit->source, start, lexer->index),
+        .kind = kind,
+        .valIdent = ident,
         .loc = loc,
     };
 }
@@ -98,23 +110,23 @@ inline static QkLocation getLocation(QkLexer* lexer) {
     };
 }
 
-inline static char advance(QkLexer* l) {
-    if (l->cur == '\n') {
-        l->line += 1;
+inline static char advance(QkLexer* lexer) {
+    if (lexer->cur == '\n') {
+        lexer->line += 1;
 
         // This is to omit the newline, the line itself doesn't really contain it
-        l->lineIndex = l->index + 1;
+        lexer->lineIndex = lexer->index + 1;
 
         // We set it to 0, not 1, because the "first" one is actually the newline,
         //  which we ignored on the line above
-        l->col = 0;
+        lexer->col = 0;
     }
 
-    l->index += 1;
-    l->cur = l->unit->source.data[l->index];
-    l->col += 1;
+    lexer->index += 1;
+    lexer->cur = lexer->unit->source.data[lexer->index];
+    lexer->col += 1;
 
-    return l->cur;
+    return lexer->cur;
 }
 
 inline static bool canIgnore(char c) {
@@ -122,6 +134,7 @@ inline static bool canIgnore(char c) {
         (c == '\n') ||
         (c == '\b') ||
         (c == '\r') ||
+		(c == '\t') ||
         (c == ' ')
     ;
 }

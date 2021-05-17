@@ -23,6 +23,15 @@ void qkPrintStatement(i64 offset, const QkStatement* stmt, FILE* stream) {
             fputs(")\n", stream);
             break;
 
+        case QK_STMT_KIND_FUN:
+            fputs("SFun ", stream);
+            qkPrintExpression(0, stmt->valFun.name, stream);
+            fputc('\n', stream);
+            QK_FOR(&stmt->valFun.body->valBlock) {
+                qkPrintStatement(offset + 2, stmt->valFun.body->valBlock.data[it], stream);
+            }
+            break;
+
         default:
             fputs("<unimplemented print for statement>\n", stream);
             break;

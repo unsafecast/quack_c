@@ -11,11 +11,15 @@ enum QkTokKind {
     QK_TOK_IDENT,
     QK_TOK_INT,
 
+    QK_TOK_FUN,
+
     QK_TOK_COL,
     QK_TOK_COL_EQ,
     QK_TOK_SEMI,
     QK_TOK_STAR,
     QK_TOK_EQ,
+    QK_TOK_CURLY_OPEN,
+    QK_TOK_CURLY_CLOSE,
 };
 
 typedef struct QkToken QkToken;
