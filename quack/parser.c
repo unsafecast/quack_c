@@ -127,6 +127,7 @@ static QkType* parseType(QkParser* parser) {
     i64 typeFlags = 0;
 
     if (parser->nextToken.kind == QK_TOK_IDENT) {
+        // TODO(important): "const" needs to be a separate kind of token
         if (qkStringArrEq(&parser->nextToken.valIdent, "const")) {
             typeFlags |= QK_TYPE_FLAG_CONST;
             advance(parser);
@@ -141,6 +142,8 @@ static QkType* parseType(QkParser* parser) {
     }
 
     if (parser->nextToken.kind == QK_TOK_IDENT) {
+        // TODO(important): Move this to type checking. We don't wanna
+        //  create anything other than incomplete types inside the parser
         if (qkStringArrEq(&parser->nextToken.valIdent, "Int8")) {
             QkType* type = qkTypeBasicInit(QK_BASIC_TYPE_I8);
             type->typeFlags = typeFlags;
