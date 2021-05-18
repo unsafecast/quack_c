@@ -12,6 +12,7 @@ enum QkTokKind {
     QK_TOK_INT,
 
     QK_TOK_FUN,
+    QK_TOK_CONST,
 
     QK_TOK_COL,
     QK_TOK_COL_EQ,

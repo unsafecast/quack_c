@@ -25,14 +25,11 @@ static QkExpression* parseBlock(QkParser* parser);
 static QkType* parseType(QkParser* parser);
 
 QkParser qkParserInit(QkLexer* lexer, QkUnit* unit) {
-    QkParser parser = (QkParser) {
+    return (QkParser) {
         .lexer = lexer,
         .unit = unit,
+	.nextToken = qkLexerNext(lexer),
     };
-
-    parser.nextToken = qkLexerNext(parser.lexer);
-
-    return parser;
 }
 
 QkStatement* qkParseStatement(QkParser* parser) {
@@ -43,7 +40,7 @@ QkStatement* qkParseStatement(QkParser* parser) {
         default: break;
     }
 
-	QkExpression* TRY(expr, qkParseExpression(parser));
+    QkExpression* TRY(expr, qkParseExpression(parser));
 
     switch (parser->nextToken.kind) {
         case QK_TOK_COL_EQ:
@@ -52,7 +49,7 @@ QkStatement* qkParseStatement(QkParser* parser) {
 
         case QK_TOK_COL: {
             advance(parser);
-			QkType* TRY(type, parseType(parser));
+	    QkType* TRY(type, parseType(parser));
             EXPECT(parser, QK_TOK_EQ);
             return parseAssign(parser, expr, type);
         }
@@ -73,30 +70,24 @@ QkExpression* qkParseExpression(QkParser* parser) {
     switch (advance(parser)->kind) {
         case QK_TOK_IDENT: {
             QkExpression* e = malloc(sizeof(QkExpression));
-            *e = (QkExpression) {
-                .kind = QK_EXPR_KIND_IDENT,
-                .loc = parser->currentToken.loc,
-                .valString = parser->currentToken.valIdent,
-            };
+            e->kind = QK_EXPR_KIND_IDENT;
+	    e->loc = parser->currentToken.loc;
+	    e->valString = parser->currentToken.valIdent;
             return e;
         }
 
         case QK_TOK_INT: {
             QkExpression* e = malloc(sizeof(QkExpression));
-            *e = (QkExpression) {
-                .kind = QK_EXPR_KIND_INT_LIT,
-                .loc = parser->currentToken.loc,
-                .valIntLit = parser->currentToken.valInt,
-            };
+	    e->kind = QK_EXPR_KIND_INT_LIT;
+	    e->loc = parser->currentToken.loc;
+	    e->valIntLit = parser->currentToken.valInt;
             return e;
         }
 
         case QK_TOK_EOF: {
             QkExpression* e = malloc(sizeof(QkExpression));
-            *e = (QkExpression) {
-                .kind = QK_EXPR_KIND_EOF,
-                .loc = parser->currentToken.loc,
-            };
+            e->kind = QK_EXPR_KIND_EOF;
+	    e->loc = parser->currentToken.loc;
             return e;
         }
 
@@ -108,30 +99,25 @@ QkExpression* qkParseExpression(QkParser* parser) {
 }
 
 static QkStatement* parseAssign(QkParser* parser, QkExpression* name, QkType* possibleType) {
-	QkExpression* TRY(value, qkParseExpression(parser));
-
-    EXPECT(parser, QK_TOK_SEMI);
-
     QkStatement* stmt = malloc(sizeof(QkStatement));
-    *stmt = (QkStatement) {
-        .kind = QK_STMT_KIND_ASSIGN,
-        .loc = name->loc,
-        .valAssign.name = name,
-        .valAssign.value = value,
-        .valAssign.possibleType = possibleType,
-    };
+    stmt->kind = QK_STMT_KIND_ASSIGN;
+    stmt->loc = name->loc;
+    
+    stmt->valAssign.name = name;
+    stmt->valAssign.possibleType = possibleType;
+    
+    TRY(stmt->valAssign.value, qkParseExpression(parser));
+    
+    EXPECT(parser, QK_TOK_SEMI);
     return stmt;
 }
 
 static QkType* parseType(QkParser* parser) {
     i64 typeFlags = 0;
 
-    if (parser->nextToken.kind == QK_TOK_IDENT) {
-        // TODO(important): "const" needs to be a separate kind of token
-        if (qkStringArrEq(&parser->nextToken.valIdent, "const")) {
-            typeFlags |= QK_TYPE_FLAG_CONST;
-            advance(parser);
-        }
+    if (parser->nextToken.kind == QK_TOK_CONST) {
+	typeFlags |= QK_TYPE_FLAG_CONST;
+	advance(parser);
     }
 
     if (parser->nextToken.kind == QK_TOK_STAR) {
@@ -141,62 +127,44 @@ static QkType* parseType(QkParser* parser) {
         return type;
     }
 
-    if (parser->nextToken.kind == QK_TOK_IDENT) {
-        // TODO(important): Move this to type checking. We don't wanna
-        //  create anything other than incomplete types inside the parser
-        if (qkStringArrEq(&parser->nextToken.valIdent, "Int8")) {
-            QkType* type = qkTypeBasicInit(QK_BASIC_TYPE_I8);
-            type->typeFlags = typeFlags;
-            advance(parser);
-            return type;
-        } else if (qkStringArrEq(&parser->nextToken.valIdent, "Uint8")) {
-            QkType* type = qkTypeBasicInit(QK_BASIC_TYPE_U8);
-            type->typeFlags = typeFlags;
-            advance(parser);
-            return type;
-        }
-    }
-
-	QkExpression* TRY(name, qkParseExpression(parser));
+    QkExpression* TRY(name, qkParseExpression(parser));
     QkType* type = qkTypeIncompleteInit(name);
     type->typeFlags |= typeFlags;
     return type;
 }
 
 static QkExpression* parseBlock(QkParser* parser) {
+    QkExpression* expr = malloc(sizeof(QkExpression));
+    expr->kind = QK_EXPR_KIND_BLOCK;
+    
     EXPECT(parser, QK_TOK_CURLY_OPEN);
-    QkDynArr array = qkDynArrInit(0);
+    expr->loc = parser->currentToken.loc;
+    
+    expr->valBlock = qkDynArrInit(0);
     while (parser->nextToken.kind != QK_TOK_CURLY_CLOSE) {
-		QkStatement* TRY(stmt, qkParseStatement(parser));
-        qkDynArrPush(&array, stmt);
+	QkStatement* TRY(stmt, qkParseStatement(parser));
+        qkDynArrPush(&expr->valBlock, stmt);
     }
     advance(parser);
 
-    QkExpression* expr = malloc(sizeof(QkExpression));
-    *expr = (QkExpression) {
-        .kind = QK_EXPR_KIND_BLOCK,
-        .valBlock = array,
-    };
     return expr;
 }
 
 static QkStatement* parseFunction(QkParser* parser) {
-    QkExpression* TRY(name, qkParseExpression(parser));
-    QkExpression* TRY(body, parseBlock(parser));
-
     QkStatement* stmt = malloc(sizeof(QkStatement));
-    *stmt = (QkStatement) {
-        .kind = QK_STMT_KIND_FUN,
-        .valFun.name = name,
-        .valFun.body = body,
-    };
+    stmt->kind = QK_STMT_KIND_FUN;
+    stmt->loc = parser->currentToken.loc;
+
+    TRY(stmt->valFun.name, qkParseExpression(parser));
+    TRY(stmt->valFun.body, parseBlock(parser));
+
     return stmt;
 }
 
 static QkToken* advance(QkParser* parser) {
     QkToken cur = parser->nextToken;
     parser->currentToken = cur;
-
+    
     parser->nextToken = qkLexerNext(parser->lexer);
 
     return &parser->currentToken;

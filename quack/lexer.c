@@ -80,6 +80,7 @@ static QkToken getIdent(QkLexer* lexer) {
 
     QkTokKind kind;
     if (qkStringArrEq(&ident, "fun")) kind = QK_TOK_FUN;
+    else if (qkStringArrEq(&ident, "const")) kind = QK_TOK_CONST;
     else kind = QK_TOK_IDENT;
 
     return (QkToken) {

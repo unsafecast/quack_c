@@ -1,4 +1,12 @@
 
 fun h {
-	x: SomeType = 43;
+    x: SomeType = 43;
+    y: const *const Int8 = null;
 }
+
+x := 32;
+
+fun somethingElse {
+    x := 32;
+}
+
