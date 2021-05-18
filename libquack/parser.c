@@ -170,7 +170,7 @@ static QkFunSig* parseFunSig(QkParser* parser) {
     sig->parameterTypes = qkDynArrInit(0);
     
     EXPECT(parser, QK_TOK_PAREN_OPEN);
-    while (parser->nextToken.kind != QK_TOK_PAREN_CLOSE) {
+    while (true) {
 	QkExpression* TRY(name, qkParseExpression(parser));
 	qkDynArrPush(&sig->parameterNames, name);
 	
@@ -181,10 +181,10 @@ static QkFunSig* parseFunSig(QkParser* parser) {
 	if (parser->nextToken.kind == QK_TOK_COMMA) {
 	    advance(parser);
 	} else {
-	    break;  // After we break, we will make sure it's a ')'
+	    EXPECT(parser, QK_TOK_PAREN_CLOSE);
+	    break;
 	}
     }
-    EXPECT(parser, QK_TOK_PAREN_CLOSE);
 
     EXPECT(parser, QK_TOK_THIN_ARROW);
     sig->returnType = parseType(parser);
