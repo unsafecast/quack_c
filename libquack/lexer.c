@@ -61,6 +61,24 @@ QkToken qkLexerNext(QkLexer* lexer) {
             case '}':
                 advance(lexer);
                 return QK_TOKEN(QK_TOK_CURLY_CLOSE, loc);
+
+	    case '(':
+		advance(lexer);
+		return QK_TOKEN(QK_TOK_PAREN_OPEN, loc);
+
+	    case ')':
+		advance(lexer);
+		return QK_TOKEN(QK_TOK_PAREN_CLOSE, loc);
+
+	    case '-':
+		switch (advance(lexer)) {
+		    case '>': advance(lexer); return QK_TOKEN(QK_TOK_THIN_ARROW, loc);
+		}
+		break;
+
+	    case ',':
+		advance(lexer);
+		return QK_TOKEN(QK_TOK_COMMA, loc);
         }
     }
 

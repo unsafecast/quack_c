@@ -1,12 +1,6 @@
 
-fun h {
-    x: SomeType = 43;
-    y: const *const Int8 = null;
-}
-
-x := 32;
-
-fun somethingElse {
-    x := 32;
+fun main(x: Int8, y: Hello) -> Unit {
+    something := 42;
+    somethingElse: Hello = y;
 }
 

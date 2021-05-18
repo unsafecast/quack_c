@@ -24,6 +24,8 @@ static QkStatement* parseFunction(QkParser* parser);
 static QkExpression* parseBlock(QkParser* parser);
 static QkType* parseType(QkParser* parser);
 
+static QkFunSig* parseFunSig(QkParser* parser);
+
 QkParser qkParserInit(QkLexer* lexer, QkUnit* unit) {
     return (QkParser) {
         .lexer = lexer,
@@ -156,9 +158,38 @@ static QkStatement* parseFunction(QkParser* parser) {
     stmt->loc = parser->currentToken.loc;
 
     TRY(stmt->valFun.name, qkParseExpression(parser));
+    TRY(stmt->valFun.sig, parseFunSig(parser));
     TRY(stmt->valFun.body, parseBlock(parser));
 
     return stmt;
+}
+
+static QkFunSig* parseFunSig(QkParser* parser) {
+    QkFunSig* sig = malloc(sizeof(QkFunSig));
+    sig->parameterNames = qkDynArrInit(0);
+    sig->parameterTypes = qkDynArrInit(0);
+    
+    EXPECT(parser, QK_TOK_PAREN_OPEN);
+    while (parser->nextToken.kind != QK_TOK_PAREN_CLOSE) {
+	QkExpression* TRY(name, qkParseExpression(parser));
+	qkDynArrPush(&sig->parameterNames, name);
+	
+	EXPECT(parser, QK_TOK_COL);
+	QkType* TRY(type, parseType(parser));
+	qkDynArrPush(&sig->parameterTypes, type);
+
+	if (parser->nextToken.kind == QK_TOK_COMMA) {
+	    advance(parser);
+	} else {
+	    break;  // After we break, we will make sure it's a ')'
+	}
+    }
+    EXPECT(parser, QK_TOK_PAREN_CLOSE);
+
+    EXPECT(parser, QK_TOK_THIN_ARROW);
+    sig->returnType = parseType(parser);
+    
+    return sig;
 }
 
 static QkToken* advance(QkParser* parser) {

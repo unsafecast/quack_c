@@ -7,6 +7,13 @@
 #include <libquack/type.h>
 #include <libquack/dynArr.h>
 
+typedef struct QkFunSig QkFunSig;
+struct QkFunSig {
+    QkDynArr parameterTypes;  // Of QkType*
+    QkDynArr parameterNames;  // Of QkExpression*
+    QkType* returnType;
+};
+
 typedef enum QkExpressionKind QkExpressionKind;
 enum QkExpressionKind {
     QK_EXPR_KIND_IDENT,
@@ -50,7 +57,7 @@ struct QkStatement {
         } valAssign;
 
         struct {
-            // TODO: Add parameters
+	    QkFunSig* sig;
             QkExpression* name;
             QkExpression* body;
         } valFun;
@@ -61,3 +68,4 @@ struct QkStatement {
 
 void qkPrintStatement(i64 offset, const QkStatement* stmt, FILE* stream);
 void qkPrintExpression(i64 offset, const QkExpression* expr, FILE* stream);
+void qkPrintFunSig(const QkFunSig* sig, FILE* stream);

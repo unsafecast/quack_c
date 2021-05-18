@@ -26,7 +26,9 @@ void qkPrintStatement(i64 offset, const QkStatement* stmt, FILE* stream) {
         case QK_STMT_KIND_FUN:
             fputs("SFun ", stream);
             qkPrintExpression(0, stmt->valFun.name, stream);
-            fputc('\n', stream);
+            fputs(": ", stream);
+	    qkPrintFunSig(stmt->valFun.sig, stream);
+	    fputc('\n', stream);
             QK_FOR(&stmt->valFun.body->valBlock) {
                 qkPrintStatement(offset + 2, stmt->valFun.body->valBlock.data[it], stream);
             }
@@ -55,6 +57,18 @@ void qkPrintExpression(i64 offset, const QkExpression* expr, FILE* stream) {
             fputs("<unimplemented print for expression>", stream);
             break;
     }
+}
+
+void qkPrintFunSig(const QkFunSig* sig, FILE* stream) {
+    fputs("fun (", stream);
+    QK_FOR(&sig->parameterNames) {
+	qkPrintExpression(0, sig->parameterNames.data[it], stream);
+	fputs(": ", stream);
+	qkPrintType(sig->parameterTypes.data[it], stream);
+	fputs(", ", stream);
+    }
+    fputs(") -> ", stream);
+    qkPrintType(sig->returnType, stream);
 }
 
 inline static void printOffset(i64 offset, FILE* stream) {

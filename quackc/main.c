@@ -19,7 +19,7 @@ int main() {
 
     fprintf(stderr, "\n");
     QkStatement* stmt = qkParseStatement(&parser);
-    while ((stmt != NULL) && (stmt->valExpr->kind != QK_EXPR_KIND_EOF)) {
+    while ((stmt != NULL) && parser.currentToken.kind != QK_TOK_EOF) {
         qkPrintStatement(0, stmt, stderr);
         stmt = qkParseStatement(&parser);
     }

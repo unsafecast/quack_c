@@ -21,6 +21,10 @@ enum QkTokKind {
     QK_TOK_EQ,
     QK_TOK_CURLY_OPEN,
     QK_TOK_CURLY_CLOSE,
+    QK_TOK_PAREN_OPEN,
+    QK_TOK_PAREN_CLOSE,
+    QK_TOK_THIN_ARROW,
+    QK_TOK_COMMA,
 };
 
 typedef struct QkToken QkToken;
