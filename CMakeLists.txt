@@ -3,5 +3,6 @@ project(quack)
 
 set(CMAKE_C_STANDARD 11)
 
-add_subdirectory(quack)
+add_subdirectory(libquack)
 add_subdirectory(quackc)
+

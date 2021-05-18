@@ -1,6 +1,6 @@
 #pragma once
-#include <quack/integer.h>
 #include <stdio.h>
+#include <libquack/integer.h>
 
 typedef struct QkLocation QkLocation;
 struct QkLocation {

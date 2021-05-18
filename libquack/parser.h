@@ -1,6 +1,6 @@
 #pragma once
-#include <quack/lexer.h>
-#include <quack/ast.h>
+#include <libquack/lexer.h>
+#include <libquack/ast.h>
 
 typedef struct QkParser QkParser;
 struct QkParser {

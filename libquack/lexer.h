@@ -1,7 +1,7 @@
 #pragma once
-#include <quack/unit.h>
-#include <quack/integer.h>
-#include <quack/token.h>
+#include <libquack/unit.h>
+#include <libquack/integer.h>
+#include <libquack/token.h>
 
 typedef struct QkLexer QkLexer;
 struct QkLexer {

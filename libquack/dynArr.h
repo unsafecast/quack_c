@@ -1,5 +1,5 @@
 #pragma once
-#include <quack/integer.h>
+#include <libquack/integer.h>
 
 typedef struct QkDynArr QkDynArr;
 struct QkDynArr {

@@ -1,8 +1,8 @@
 #pragma once
 #include <stdio.h>
-#include <quack/location.h>
-#include <quack/string.h>
-#include <quack/token.h>
+#include <libquack/location.h>
+#include <libquack/string.h>
+#include <libquack/token.h>
 
 typedef enum QkErrKind QkErrKind;
 enum QkErrKind {

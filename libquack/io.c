@@ -1,7 +1,7 @@
 #include "./io.h"
-#include "quack/string.h"
-#include <quack/integer.h>
 #include <stdlib.h>
+#include <libquack/string.h>
+#include <libquack/integer.h>
 
 QkString qkReadWholeFile(const char* path) {
     FILE* f = fopen(path, "r");

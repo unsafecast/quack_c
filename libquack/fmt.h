@@ -1,7 +1,7 @@
 #pragma once
-#include <quack/integer.h>
 #include <stdio.h>
-#include <quack/string.h>
+#include <libquack/integer.h>
+#include <libquack/string.h>
 
 typedef enum QkConsoleFormat QkConsoleFormat;
 enum QkConsoleFormat {

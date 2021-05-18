@@ -1,6 +1,6 @@
 #include "./type.h"
-#include "quack/ast.h"
 #include <stdlib.h>
+#include <libquack/ast.h>
 
 QkType* qkTypeBasicInit(QkBasicType basicType) {
     QkType* type = malloc(sizeof(QkType));

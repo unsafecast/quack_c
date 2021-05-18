@@ -1,7 +1,7 @@
 #pragma once
-#include <quack/string.h>
-#include <quack/integer.h>
 #include <stdio.h>
+#include <libquack/string.h>
+#include <libquack/integer.h>
 
 typedef enum QkTypeKind QkTypeKind;
 enum QkTypeKind {

@@ -1,7 +1,7 @@
 #pragma once
-#include <quack/string.h>
-#include <quack/dynArr.h>
-#include <quack/error.h>
+#include <libquack/string.h>
+#include <libquack/dynArr.h>
+#include <libquack/error.h>
 
 typedef struct QkUnit QkUnit;
 struct QkUnit {

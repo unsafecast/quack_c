@@ -1,10 +1,11 @@
 #pragma once
-#include <quack/string.h>
-#include <quack/integer.h>
-#include <quack/location.h>
+
 #include <stdio.h>
-#include <quack/type.h>
-#include <quack/dynArr.h>
+#include <libquack/string.h>
+#include <libquack/integer.h>
+#include <libquack/location.h>
+#include <libquack/type.h>
+#include <libquack/dynArr.h>
 
 typedef enum QkExpressionKind QkExpressionKind;
 enum QkExpressionKind {

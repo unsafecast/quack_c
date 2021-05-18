@@ -1,7 +1,7 @@
 #include "./token.h"
-#include "quack/location.h"
-#include <quack/string.h>
 #include <stdio.h>
+#include <libquack/location.h>
+#include <libquack/string.h>
 
 void qkPrintToken(const QkToken* tok, FILE* stream) {
     qkPrintLocation(&tok->loc, stream);

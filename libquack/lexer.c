@@ -1,11 +1,11 @@
 #include "./lexer.h"
-#include "quack/location.h"
-#include "quack/token.h"
-#include <quack/dynArr.h>
-#include <quack/string.h>
 #include <stdbool.h>
 #include <ctype.h>
 #include <stdlib.h>
+#include <libquack/location.h>
+#include <libquack/token.h>
+#include <libquack/dynArr.h>
+#include <libquack/string.h>
 
 #define PEEK(l) (l)->unit->source.data[(l)->index + 1]
 

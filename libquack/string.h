@@ -1,7 +1,7 @@
 #pragma once
-#include <quack/integer.h>
 #include <stdio.h>
 #include <stdbool.h>
+#include <libquack/integer.h>
 
 typedef struct QkString QkString;
 struct QkString {

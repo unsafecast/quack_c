@@ -1,12 +1,12 @@
-#include "quack/ast.h"
-#include "quack/error.h"
-#include <quack/string.h>
-#include <quack/lexer.h>
-#include <quack/token.h>
-#include <quack/unit.h>
-#include <quack/parser.h>
 #include <string.h>
-#include <quack/io.h>
+#include <libquack/ast.h>
+#include <libquack/error.h>
+#include <libquack/string.h>
+#include <libquack/lexer.h>
+#include <libquack/token.h>
+#include <libquack/unit.h>
+#include <libquack/parser.h>
+#include <libquack/io.h>
 
 int main() {
     QkString source = qkReadWholeFile("../examples/assign.qk");

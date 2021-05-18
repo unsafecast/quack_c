@@ -1,6 +1,6 @@
 #include "./fmt.h"
-#include "quack/string.h"
 #include <stdarg.h>
+#include <libquack/string.h>
 
 #define COL_RED "\x1b[31m"
 #define COL_BLUE "\x1b[34m"

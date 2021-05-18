@@ -1,5 +1,5 @@
 #include "./unit.h"
-#include "quack/dynArr.h"
+#include <libquack/dynArr.h>
 
 QkUnit qkUnitInit() {
     return (QkUnit) {

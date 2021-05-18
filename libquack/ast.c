@@ -1,5 +1,5 @@
 #include "./ast.h"
-#include "quack/type.h"
+#include <libquack/type.h>
 #include <stdio.h>
 
 inline static void printOffset(i64 offset, FILE* stream);

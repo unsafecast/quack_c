@@ -1,13 +1,13 @@
 #include "./parser.h"
-#include <quack/ast.h>
-#include <quack/dynArr.h>
-#include <quack/error.h>
-#include <quack/string.h>
-#include <quack/type.h>
-#include <quack/lexer.h>
-#include <quack/token.h>
 #include <stdlib.h>
 #include <stdbool.h>
+#include <libquack/ast.h>
+#include <libquack/dynArr.h>
+#include <libquack/error.h>
+#include <libquack/string.h>
+#include <libquack/type.h>
+#include <libquack/lexer.h>
+#include <libquack/token.h>
 
 static QkToken* advance(QkParser* parser);
 

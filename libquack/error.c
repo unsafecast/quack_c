@@ -1,11 +1,11 @@
 #include "./error.h"
-#include "quack/location.h"
-#include "quack/string.h"
-#include "quack/token.h"
 #include <stdio.h>
 #include <stdlib.h>
-#include <quack/fmt.h>
 #include <math.h>
+#include <libquack/location.h>
+#include <libquack/string.h>
+#include <libquack/token.h>
+#include <libquack/fmt.h>
 
 static void printOffset(i64 column, char c, FILE* stream);
 static i64 numberOfDigits(i64 number);
