@@ -4,3 +4,6 @@ fun main(x: Int8, y: Hello) -> Unit {
     somethingElse: Hello = y;
 }
 
+fun goodbye() -> Int8 {
+}
+

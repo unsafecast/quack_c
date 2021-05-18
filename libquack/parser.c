@@ -171,6 +171,11 @@ static QkFunSig* parseFunSig(QkParser* parser) {
     
     EXPECT(parser, QK_TOK_PAREN_OPEN);
     while (true) {
+	if (parser->nextToken.kind == QK_TOK_PAREN_CLOSE) {
+	    advance(parser);
+	    break;
+	}
+	
 	QkExpression* TRY(name, qkParseExpression(parser));
 	qkDynArrPush(&sig->parameterNames, name);
 	
