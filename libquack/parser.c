@@ -57,7 +57,6 @@ QkStatement* qkParseStatement(QkParser* parser) {
         }
         
         default: {
-            advance(parser);
             QkStatement* stmt = malloc(sizeof(QkStatement));
             *stmt = (QkStatement) {
                 .kind = QK_STMT_KIND_EXPR,

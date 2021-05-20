@@ -83,6 +83,7 @@ QkToken qkLexerNext(QkLexer* lexer) {
     }
 
     qkDynArrPush(&lexer->unit->errLog, qkErrorUnexpChar(getLocation(lexer), lexer->cur));
+
     return QK_TOKEN(QK_TOK_NULL, getLocation(lexer));
 }
 
