@@ -3,10 +3,11 @@
 #include <string.h>
 
 QkString qkStringFromArray(char* arr, i64 size) {
-    return (QkString) {
-        .size = size,
-        .data = arr,
-    };
+    QkString string;
+    string.size = size;
+    string.data = arr;
+    
+    return string;
 }
 
 void qkPrintString(const QkString* str, FILE* stream) {
@@ -14,10 +15,11 @@ void qkPrintString(const QkString* str, FILE* stream) {
 }
 
 QkString qkSliceString(const QkString* src, i64 start, i64 end) {
-    return (QkString) {
-        .data = src->data + start,
-        .size = end - start,
-    };
+    QkString string;
+    string.data = src->data + start;
+    string.size = end - start;
+    
+    return string;
 }
 
 QkString qkSliceStringUntil(const QkString* src, i64 start, char end) {

@@ -17,14 +17,15 @@ static QkToken getIdent(QkLexer* lexer);
 static QkToken getNumber(QkLexer* lexer);
 
 QkLexer qkLexerInit(QkUnit* unit) {
-    return (QkLexer) {
-        .unit = unit,
-        .index = 0,
-        .cur = unit->source.data[0],
-        .line = 1,
-        .col = 1,
-        .lineIndex = 0,
-    };
+    QkLexer lexer;
+    lexer.unit = unit;
+    lexer.index = 0;
+    lexer.cur = unit->source.data[0];
+    lexer.line = 1;
+    lexer.col = 1;
+    lexer.lineIndex = 0;
+
+    return lexer;
 }
 
 QkToken qkLexerNext(QkLexer* lexer) {
@@ -90,44 +91,47 @@ QkToken qkLexerNext(QkLexer* lexer) {
 
 
 static QkToken getIdent(QkLexer* lexer) {
-    QkLocation loc = getLocation(lexer);
+    QkToken token;
+    token.loc = getLocation(lexer);
 
     i64 start = lexer->index;
     while (isalnum(lexer->cur)) advance(lexer);
 
     QkString ident = qkSliceString(&lexer->unit->source, start, lexer->index);
 
-    QkTokKind kind;
-    if (qkStringArrEq(&ident, "fun")) kind = QK_TOK_FUN;
-    else if (qkStringArrEq(&ident, "const")) kind = QK_TOK_CONST;
-    else kind = QK_TOK_IDENT;
+    if (qkStringArrEq(&ident, "fun")) token.kind = QK_TOK_FUN;
+    else if (qkStringArrEq(&ident, "const")) token.kind = QK_TOK_CONST;
+    else token.kind = QK_TOK_IDENT;
 
-    return (QkToken) {
-        .kind = kind,
-        .valIdent = ident,
-        .loc = loc,
-    };
+    token.valIdent = ident;
+
+    return token;
 }
 
 static QkToken getNumber(QkLexer* lexer) {
-    QkLocation loc = getLocation(lexer);
+    QkToken token;
+    token.kind = QK_TOK_INT;
+    token.loc = getLocation(lexer);
 
     i64 start = lexer->index;
     while (isdigit(lexer->cur)) advance(lexer);  // TODO: Add support for floats
-    return (QkToken) {
-        .kind = QK_TOK_INT,
-        .valInt = strtol(qkSliceString(&lexer->unit->source, start, lexer->index).data, NULL, 10),
-        .loc = loc,
-    };
+    
+    token.valInt = strtol(qkSliceString(
+			    &lexer->unit->source,
+			    start, lexer->index).data,
+			    NULL, 10);
+
+    return token;
 }
 
 inline static QkLocation getLocation(QkLexer* lexer) {
-    return (QkLocation) {
-        .line = lexer->line,
-        .col = lexer->col,
-        .index = lexer->index,
-        .lineIndex = lexer->lineIndex,
-    };
+    QkLocation location;
+    location.line = lexer->line;
+    location.col = lexer->col;
+    location.index = lexer->index;
+    location.lineIndex = lexer->lineIndex;
+    
+    return location;
 }
 
 inline static char advance(QkLexer* lexer) {
@@ -154,7 +158,7 @@ inline static bool canIgnore(char c) {
         (c == '\n') ||
         (c == '\b') ||
         (c == '\r') ||
-		(c == '\t') ||
+	(c == '\t') ||
         (c == ' ')
     ;
 }

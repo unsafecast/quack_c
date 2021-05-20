@@ -2,7 +2,8 @@
 #include <libquack/dynArr.h>
 
 QkUnit qkUnitInit() {
-    return (QkUnit) {
-        .errLog = qkDynArrInit(0),
-    };
+    QkUnit unit;
+    unit.errLog = qkDynArrInit(0);
+
+    return unit;
 }

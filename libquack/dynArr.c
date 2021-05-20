@@ -4,11 +4,12 @@
 QkDynArr qkDynArrInit(i64 initialCap) {
     if (initialCap < 1) initialCap = 1;
 
-    return (QkDynArr) {
-        .data = malloc(initialCap * sizeof(void*)),
-        .cap = initialCap,
-        .size = 0,
-    };
+    QkDynArr arr;
+    arr.data = malloc(initialCap * sizeof(void*));
+    arr.cap = initialCap;
+    arr.size = 0;
+    
+    return arr;
 }
 
 void qkDynArrPush(QkDynArr* arr, void* item) {

@@ -9,7 +9,7 @@
 #include <libquack/lexer.h>
 #include <libquack/token.h>
 
-static QkToken* advance(QkParser* parser);
+static QkToken advance(QkParser* parser);
 
 static bool expect(QkParser* parser, QkTokKind kind);
 #define EXPECT(parser, kind) do { if (!expect((parser), (kind))) return NULL; } while (0)
@@ -28,11 +28,12 @@ static QkType* parseType(QkParser* parser);
 static QkFunSig* parseFunSig(QkParser* parser);
 
 QkParser qkParserInit(QkLexer* lexer, QkUnit* unit) {
-    return (QkParser) {
-        .lexer = lexer,
-        .unit = unit,
-	.nextToken = qkLexerNext(lexer),
-    };
+    QkParser parser;
+    parser.lexer = lexer;
+    parser.unit = unit;
+    parser.nextToken = qkLexerNext(lexer);
+
+    return parser;
 }
 
 QkStatement* qkParseStatement(QkParser* parser) {
@@ -63,17 +64,16 @@ QkStatement* qkParseStatement(QkParser* parser) {
         
         default: {
             QkStatement* stmt = malloc(sizeof(QkStatement));
-            *stmt = (QkStatement) {
-                .kind = QK_STMT_KIND_EXPR,
-                .valExpr = expr,
-            };
+	    stmt->kind = QK_STMT_KIND_EXPR;
+	    stmt->valExpr = expr;
+	    
             return stmt;
         }
     }
 }
 
 QkExpression* qkParseExpression(QkParser* parser) {
-    switch (advance(parser)->kind) {
+    switch (advance(parser).kind) {
         case QK_TOK_IDENT: {
             QkExpression* e = malloc(sizeof(QkExpression));
             e->kind = QK_EXPR_KIND_IDENT;
@@ -213,19 +213,19 @@ static QkStatement* parseReassign(QkParser* parser, QkExpression* name) {
     return stmt;
 }
 
-static QkToken* advance(QkParser* parser) {
+static QkToken advance(QkParser* parser) {
     QkToken cur = parser->nextToken;
     parser->currentToken = cur;
     
     parser->nextToken = qkLexerNext(parser->lexer);
 
-    return &parser->currentToken;
+    return parser->currentToken;
 }
 
 static bool expect(QkParser* parser, QkTokKind kind) {
-    QkToken* token = advance(parser);
-    if (token->kind != kind) {
-        qkDynArrPush(&parser->unit->errLog, qkErrorExpToken(token->loc, kind, token));
+    QkToken token = advance(parser);
+    if (token.kind != kind) {
+        qkDynArrPush(&parser->unit->errLog, qkErrorExpToken(token.loc, kind, &token));
         return false;
     }
 

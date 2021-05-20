@@ -4,30 +4,24 @@
 
 QkType* qkTypeBasicInit(QkBasicType basicType) {
     QkType* type = malloc(sizeof(QkType));
-    *type = (QkType) {
-        .kind = QK_TYPE_KIND_BASIC,
-        .valBasic = basicType,
-    };
+    type->kind = QK_TYPE_KIND_BASIC;
+    type->valBasic = basicType;
 
     return type;
 }
 
 QkType* qkTypePtrInit(QkType* base) {
     QkType* type = malloc(sizeof(QkType));
-    *type = (QkType) {
-        .kind = QK_TYPE_KIND_PTR,
-        .valPtr = base,
-    };
-
+    type->kind = QK_TYPE_KIND_PTR;
+    type->valPtr = base;
+    
     return type;
 }
 
 QkType* qkTypeIncompleteInit(QkExpression* expression) {
     QkType* type = malloc(sizeof(QkType));
-    *type = (QkType) {
-        .kind = QK_TYPE_KIND_INCOMPLETE,
-        .valIncomplete = expression,
-    };
+    type->kind = QK_TYPE_KIND_INCOMPLETE;
+    type->valIncomplete = expression;
 
     return type;
 }
