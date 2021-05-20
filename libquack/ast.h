@@ -9,8 +9,7 @@
 
 typedef struct QkFunSig QkFunSig;
 struct QkFunSig {
-    QkDynArr parameterTypes;  // Of QkType*
-    QkDynArr parameterNames;  // Of QkExpression*
+    QkDynArr parameters;  // Of QkExpression/valTypedecl
     QkType* returnType;
 };
 
@@ -20,6 +19,7 @@ enum QkExpressionKind {
     QK_EXPR_KIND_INT_LIT,
     QK_EXPR_KIND_EOF,
     QK_EXPR_KIND_BLOCK,
+    QK_EXPR_KIND_TYPEDECL,
 };
 
 typedef struct QkExpression QkExpression;
@@ -33,6 +33,11 @@ struct QkExpression {
         QkString valString;
         i64 valIntLit;
         QkDynArr valBlock; // Of QkStatement*
+
+	struct {
+	    QkExpression* name;
+	    QkType* type;
+	} valTypedecl;
     };
 };
 
@@ -83,6 +88,10 @@ struct QkStatement {
 	    QkExpression* body;
 	    QkExpression* elseBody;
 	} valIf;
+
+	struct {
+	    QkExpression* name;
+	} valStruct;
     };
 };
 

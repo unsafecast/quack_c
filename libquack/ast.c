@@ -88,6 +88,13 @@ void qkPrintExpression(i64 offset, const QkExpression* expr, FILE* stream) {
 	    break;
 	}
 
+        case QK_EXPR_KIND_TYPEDECL:
+	    fputs("ETypedecl(", stream);
+	    qkPrintExpression(0, expr->valTypedecl.name, stream);
+	    fputs(": ", stream);
+	    qkPrintType(expr->valTypedecl.type, stream);
+	    break;
+
         default:
             fputs("<unimplemented print for expression>", stream);
             break;
@@ -95,14 +102,11 @@ void qkPrintExpression(i64 offset, const QkExpression* expr, FILE* stream) {
 }
 
 void qkPrintFunSig(const QkFunSig* sig, FILE* stream) {
-    fputs("fun (", stream);
-    QK_FOR(&sig->parameterNames) {
-	qkPrintExpression(0, sig->parameterNames.data[it], stream);
-	fputs(": ", stream);
-	qkPrintType(sig->parameterTypes.data[it], stream);
-	fputs(", ", stream);
+    fputs("fun ", stream);
+    QK_FOR(&sig->parameters) {
+	qkPrintExpression(0, sig->parameters.data[it], stream);
+	fputs(" -> ", stream);
     }
-    fputs(") -> ", stream);
     qkPrintType(sig->returnType, stream);
 }
 

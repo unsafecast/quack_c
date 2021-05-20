@@ -23,8 +23,10 @@ static QkStatement* parseReassign(QkParser* parser, QkExpression* name);
 static QkStatement* parseFunction(QkParser* parser);
 static QkStatement* parseWhile(QkParser* parser);
 static QkStatement* parseIf(QkParser* parser);
+static QkStatement* parseStruct(QkParser* parser);
 
 static QkExpression* parseBlock(QkParser* parser);
+static QkExpression* parseTypedecl(QkParser* parser);
 static QkType* parseType(QkParser* parser);
 
 static QkFunSig* parseFunSig(QkParser* parser);
@@ -49,6 +51,9 @@ QkStatement* qkParseStatement(QkParser* parser) {
         case QK_TOK_IF:
 	    advance(parser);
 	    return parseIf(parser);
+        case QK_TOK_STRUCT:
+	    advance(parser);
+	    return parseStruct(parser);
         default: break;
     }
 
@@ -178,8 +183,7 @@ static QkStatement* parseFunction(QkParser* parser) {
 
 static QkFunSig* parseFunSig(QkParser* parser) {
     QkFunSig* sig = malloc(sizeof(QkFunSig));
-    sig->parameterNames = qkDynArrInit(0);
-    sig->parameterTypes = qkDynArrInit(0);
+    sig->parameters = qkDynArrInit(0);
     
     EXPECT(parser, QK_TOK_PAREN_OPEN);
     while (true) {
@@ -188,13 +192,9 @@ static QkFunSig* parseFunSig(QkParser* parser) {
 	    break;
 	}
 	
-	QkExpression* TRY(name, qkParseExpression(parser));
-	qkDynArrPush(&sig->parameterNames, name);
+	QkExpression* TRY(parameter, parseTypedecl(parser));
+	qkDynArrPush(&sig->parameters, parameter);
 	
-	EXPECT(parser, QK_TOK_COL);
-	QkType* TRY(type, parseType(parser));
-	qkDynArrPush(&sig->parameterTypes, type);
-
 	if (parser->nextToken.kind == QK_TOK_COMMA) {
 	    advance(parser);
 	} else {
@@ -248,6 +248,22 @@ static QkStatement* parseIf(QkParser* parser) {
     }
 
     return stmt;
+}
+
+static QkExpression* parseTypedecl(QkParser* parser) {
+    QkExpression* expr = malloc(sizeof(QkExpression));
+    expr->kind = QK_EXPR_KIND_TYPEDECL;
+    expr->loc = parser->currentToken.loc;
+
+    TRY(expr->valTypedecl.name, qkParseExpression(parser));
+    EXPECT(parser, QK_TOK_COL);
+    TRY(expr->valTypedecl.type, parseType(parser));
+
+    return expr;
+}
+
+static QkStatement* parseStruct(QkParser *parser) {
+    // TODO: Implement
 }
 
 static QkToken advance(QkParser* parser) {

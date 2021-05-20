@@ -122,6 +122,7 @@ static char* showTokenKind(QkTokKind kind) {
 	case QK_TOK_IF:     return "'if'";
 	case QK_TOK_ELSE:   return "'else'";
 	case QK_TOK_WHILE:  return "'while'";
+	case QK_TOK_STRUCT: return "'struct'";
 
         case QK_TOK_CURLY_OPEN:  return "'{'";
         case QK_TOK_CURLY_CLOSE: return "'}'";
@@ -194,6 +195,9 @@ static void printToken(FILE* stream, i64 fmt, const QkToken* tok) {
 	    break;
         case QK_TOK_WHILE:
 	    qkFmtPrintf(stream, fmt, "'while'");
+	    break;
+        case QK_TOK_STRUCT:
+	    qkFmtPrintf(stream, fmt, "'struct'");
 	    break;
     }
 }

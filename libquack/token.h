@@ -16,6 +16,7 @@ enum QkTokKind {
     QK_TOK_IF,
     QK_TOK_ELSE,
     QK_TOK_WHILE,
+    QK_TOK_STRUCT,
 
     QK_TOK_COL,
     QK_TOK_COL_EQ,
