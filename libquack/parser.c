@@ -19,6 +19,7 @@ static bool expect(QkParser* parser, QkTokKind kind);
 #define TRY(name, value) name = value; if (name == NULL) return NULL
 
 static QkStatement* parseAssign(QkParser* parser, QkExpression* name, QkType* possibleType);
+static QkStatement* parseReassign(QkParser* parser, QkExpression* name);
 static QkStatement* parseFunction(QkParser* parser);
 
 static QkExpression* parseBlock(QkParser* parser);
@@ -55,6 +56,10 @@ QkStatement* qkParseStatement(QkParser* parser) {
             EXPECT(parser, QK_TOK_EQ);
             return parseAssign(parser, expr, type);
         }
+
+        case QK_TOK_EQ:
+	    advance(parser);
+	    return parseReassign(parser, expr);
         
         default: {
             QkStatement* stmt = malloc(sizeof(QkStatement));
@@ -194,6 +199,18 @@ static QkFunSig* parseFunSig(QkParser* parser) {
     sig->returnType = parseType(parser);
     
     return sig;
+}
+
+static QkStatement* parseReassign(QkParser* parser, QkExpression* name) {
+    QkStatement* stmt = malloc(sizeof(QkStatement));
+    stmt->kind = QK_STMT_KIND_REASSIGN;
+    stmt->loc = name->loc;
+    stmt->valReassign.name = name;
+    
+    TRY(stmt->valReassign.value, qkParseExpression(parser));
+    EXPECT(parser, QK_TOK_SEMI);
+
+    return stmt;
 }
 
 static QkToken* advance(QkParser* parser) {

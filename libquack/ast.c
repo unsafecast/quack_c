@@ -34,6 +34,14 @@ void qkPrintStatement(i64 offset, const QkStatement* stmt, FILE* stream) {
             }
             break;
 
+        case QK_STMT_KIND_REASSIGN:
+	    fputs("SReassign(", stream);
+	    qkPrintExpression(0, stmt->valReassign.name, stream);
+	    fputs(" = ", stream);
+	    qkPrintExpression(0, stmt->valReassign.value, stream);
+	    fputs(")\n", stream);
+	    break;
+
         default:
             fputs("<unimplemented print for statement>\n", stream);
             break;

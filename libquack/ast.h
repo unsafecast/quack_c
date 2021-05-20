@@ -43,6 +43,8 @@ enum QkStatementKind {
 
     // NOTE: When we implement lambdas, this will probably move to the QkExpression structure
     QK_STMT_KIND_FUN,
+
+    QK_STMT_KIND_REASSIGN,
 };
 
 struct QkStatement {
@@ -63,6 +65,11 @@ struct QkStatement {
         } valFun;
 
         QkExpression* valExpr;
+
+	struct {
+	    QkExpression* name;
+	    QkExpression* value;
+	} valReassign;
     };
 };
 

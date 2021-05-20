@@ -2,6 +2,9 @@
 fun main(x: Int8, y: Hello) -> Unit {
     something := 42;
     somethingElse: Hello = y;
+
+    something = 32;
+    somethingElse = y;
 }
 
 fun goodbye() -> Int8 {
