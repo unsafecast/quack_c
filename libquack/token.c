@@ -37,5 +37,11 @@ void qkPrintToken(const QkToken* tok, FILE* stream) {
         case QK_TOK_SEMI:
             fputs("TokSemi\n", stream);
             break;
+
+	    // TODO: We really need to implement print for all the other tokens
+	    
+        default:
+	    fputs("<unimplemented print for token>\n", stream);
     }
 }
+

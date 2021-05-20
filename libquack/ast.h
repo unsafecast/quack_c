@@ -45,6 +45,8 @@ enum QkStatementKind {
     QK_STMT_KIND_FUN,
 
     QK_STMT_KIND_REASSIGN,
+    QK_STMT_KIND_WHILE,
+    QK_STMT_KIND_IF,
 };
 
 struct QkStatement {
@@ -70,6 +72,17 @@ struct QkStatement {
 	    QkExpression* name;
 	    QkExpression* value;
 	} valReassign;
+
+	struct {
+	    QkExpression* condition;
+	    QkExpression* body;  // FIXME: Maybe this needs to be a separate structure?
+	} valWhile;
+
+	struct {
+	    QkExpression* condition;
+	    QkExpression* body;
+	    QkExpression* elseBody;
+	} valIf;
     };
 };
 

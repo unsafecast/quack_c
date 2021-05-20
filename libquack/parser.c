@@ -21,6 +21,8 @@ static bool expect(QkParser* parser, QkTokKind kind);
 static QkStatement* parseAssign(QkParser* parser, QkExpression* name, QkType* possibleType);
 static QkStatement* parseReassign(QkParser* parser, QkExpression* name);
 static QkStatement* parseFunction(QkParser* parser);
+static QkStatement* parseWhile(QkParser* parser);
+static QkStatement* parseIf(QkParser* parser);
 
 static QkExpression* parseBlock(QkParser* parser);
 static QkType* parseType(QkParser* parser);
@@ -41,6 +43,12 @@ QkStatement* qkParseStatement(QkParser* parser) {
         case QK_TOK_FUN:
             advance(parser);
             return parseFunction(parser);
+        case QK_TOK_WHILE:
+	    advance(parser);
+	    return parseWhile(parser);
+        case QK_TOK_IF:
+	    advance(parser);
+	    return parseIf(parser);
         default: break;
     }
 
@@ -209,6 +217,35 @@ static QkStatement* parseReassign(QkParser* parser, QkExpression* name) {
     
     TRY(stmt->valReassign.value, qkParseExpression(parser));
     EXPECT(parser, QK_TOK_SEMI);
+
+    return stmt;
+}
+
+static QkStatement* parseWhile(QkParser* parser) {
+    QkStatement* stmt = malloc(sizeof(QkStatement));
+    stmt->kind = QK_STMT_KIND_WHILE;
+    stmt->loc = parser->currentToken.loc;
+
+    TRY(stmt->valWhile.condition, qkParseExpression(parser));
+    TRY(stmt->valWhile.body, parseBlock(parser));
+
+    return stmt;
+}
+
+static QkStatement* parseIf(QkParser* parser) {
+    QkStatement* stmt = malloc(sizeof(QkStatement));
+    stmt->kind = QK_STMT_KIND_IF;
+    stmt->loc = parser->currentToken.loc;
+
+    TRY(stmt->valIf.condition, qkParseExpression(parser));
+    TRY(stmt->valIf.body, parseBlock(parser));
+
+    if (parser->nextToken.kind == QK_TOK_ELSE) {
+	advance(parser);
+	TRY(stmt->valIf.elseBody, parseBlock(parser));
+    } else {
+	stmt->valIf.elseBody = NULL;
+    }
 
     return stmt;
 }

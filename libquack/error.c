@@ -119,6 +119,9 @@ static char* showTokenKind(QkTokKind kind) {
         case QK_TOK_FUN:    return "'fun'";
         case QK_TOK_CONST:  return "'const'";
         case QK_TOK_COMMA:  return "','";
+	case QK_TOK_IF:     return "'if'";
+	case QK_TOK_ELSE:   return "'else'";
+	case QK_TOK_WHILE:  return "'while'";
 
         case QK_TOK_CURLY_OPEN:  return "'{'";
         case QK_TOK_CURLY_CLOSE: return "'}'";
@@ -182,6 +185,15 @@ static void printToken(FILE* stream, i64 fmt, const QkToken* tok) {
 	    break;
         case QK_TOK_COMMA:
 	    qkFmtPrintf(stream, fmt, "','");
+	    break;
+        case QK_TOK_IF:
+	    qkFmtPrintf(stream, fmt, "'if'");
+	    break;
+        case QK_TOK_ELSE:
+	    qkFmtPrintf(stream, fmt, "'else'");
+	    break;
+        case QK_TOK_WHILE:
+	    qkFmtPrintf(stream, fmt, "'while'");
 	    break;
     }
 }

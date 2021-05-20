@@ -29,9 +29,7 @@ void qkPrintStatement(i64 offset, const QkStatement* stmt, FILE* stream) {
             fputs(": ", stream);
 	    qkPrintFunSig(stmt->valFun.sig, stream);
 	    fputc('\n', stream);
-            QK_FOR(&stmt->valFun.body->valBlock) {
-                qkPrintStatement(offset + 2, stmt->valFun.body->valBlock.data[it], stream);
-            }
+	    qkPrintExpression(offset + 2, stmt->valFun.body, stream);
             break;
 
         case QK_STMT_KIND_REASSIGN:
@@ -40,6 +38,24 @@ void qkPrintStatement(i64 offset, const QkStatement* stmt, FILE* stream) {
 	    fputs(" = ", stream);
 	    qkPrintExpression(0, stmt->valReassign.value, stream);
 	    fputs(")\n", stream);
+	    break;
+
+        case QK_STMT_KIND_WHILE:
+	    fputs("SWhile(", stream);
+	    qkPrintExpression(0, stmt->valWhile.condition, stream);
+	    fputs(")\n", stream);
+	    qkPrintExpression(offset + 2, stmt->valWhile.body, stream);
+	    break;
+
+	case QK_STMT_KIND_IF:
+	    fputs("SIf(", stream);
+	    qkPrintExpression(0, stmt->valIf.condition, stream);
+	    fputs(")\n", stream);
+	    qkPrintExpression(offset + 2, stmt->valIf.body, stream);
+	    if (stmt->valIf.elseBody != NULL) {
+		fputs("SElse\n", stream);
+		qkPrintExpression(offset + 2, stmt->valIf.elseBody, stream);
+	    }
 	    break;
 
         default:
@@ -60,6 +76,17 @@ void qkPrintExpression(i64 offset, const QkExpression* expr, FILE* stream) {
         case QK_EXPR_KIND_INT_LIT:
             fprintf(stream, "EIntLit(%ld)", expr->valIntLit);
             break;
+
+        case QK_EXPR_KIND_BLOCK: {
+	    // This is a weird hack, but it's so we don't offset 2 times
+	    //  the **first** time we print
+	    i64 realOffset = 0;
+	    QK_FOR(&expr->valBlock) {
+		qkPrintStatement(realOffset, expr->valBlock.data[it], stream);
+		realOffset = offset;
+	    }
+	    break;
+	}
 
         default:
             fputs("<unimplemented print for expression>", stream);

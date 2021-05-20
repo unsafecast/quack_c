@@ -5,8 +5,16 @@ fun main(x: Int8, y: Hello) -> Unit {
 
     something = 32;
     somethingElse = y;
+
+    while something {
+        something = something;
+    }
 }
 
-fun goodbye() -> Int8 {
+fun goodbye(whatever: Int32) -> Int8 {
+    if true {
+    
+    } else {
+    }
 }
 

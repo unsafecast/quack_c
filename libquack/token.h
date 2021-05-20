@@ -13,6 +13,9 @@ enum QkTokKind {
 
     QK_TOK_FUN,
     QK_TOK_CONST,
+    QK_TOK_IF,
+    QK_TOK_ELSE,
+    QK_TOK_WHILE,
 
     QK_TOK_COL,
     QK_TOK_COL_EQ,

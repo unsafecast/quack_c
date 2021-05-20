@@ -101,6 +101,9 @@ static QkToken getIdent(QkLexer* lexer) {
 
     if (qkStringArrEq(&ident, "fun")) token.kind = QK_TOK_FUN;
     else if (qkStringArrEq(&ident, "const")) token.kind = QK_TOK_CONST;
+    else if (qkStringArrEq(&ident, "if")) token.kind = QK_TOK_IF;
+    else if (qkStringArrEq(&ident, "else")) token.kind = QK_TOK_ELSE;
+    else if (qkStringArrEq(&ident, "while")) token.kind = QK_TOK_WHILE;
     else token.kind = QK_TOK_IDENT;
 
     token.valIdent = ident;
