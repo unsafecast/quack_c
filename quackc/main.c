@@ -20,7 +20,7 @@ int main() {
     fprintf(stderr, "\n");
     QkStatement* stmt = qkParseStatement(&parser);
     while ((stmt != NULL) && parser.currentToken.kind != QK_TOK_EOF) {
-        qkPrintStatement(0, stmt, stderr);
+	qkPrintStatement(0, stmt, stderr);
         stmt = qkParseStatement(&parser);
     }
 

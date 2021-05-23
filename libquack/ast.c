@@ -93,6 +93,7 @@ void qkPrintExpression(i64 offset, const QkExpression* expr, FILE* stream) {
 	    qkPrintExpression(0, expr->valTypedecl.name, stream);
 	    fputs(": ", stream);
 	    qkPrintType(expr->valTypedecl.type, stream);
+	    fputs(")", stream);
 	    break;
 
         default:
